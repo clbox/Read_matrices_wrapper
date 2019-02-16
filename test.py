@@ -13,4 +13,5 @@ friction_index_list = np.array([37,38])
 
 
 S = np.empty((3, friction_n_active_atoms, n_k_points, n_basis*n_basis, n_spin))
-friction_read_matrices_H_S_p1.friction_read_matrices_h_s_p1(n_basis,n_spin,n_k_points,n_cells_in_hamiltonian,friction_n_active_atoms,real_eigenvectors,friction_index_list)
+H = np.empty((3, friction_n_active_atoms, n_k_points, n_basis*n_basis, 1, n_spin))
+S,H = friction_read_matrices_H_S_p1.friction_read_matrices_h_s_p1(n_spin,n_basis,n_k_points,n_cells_in_hamiltonian,friction_n_active_atoms,real_eigenvectors,friction_index_list)
