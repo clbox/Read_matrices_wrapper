@@ -1,6 +1,6 @@
     subroutine friction_read_matrices_H_S_p1 &
             ( first_order_S, first_order_H, first_order_S_cmplx, first_order_H_cmplx,&
-            n_spin, n_basis, n_k_points, n_cells_in_hamiltonian,&
+            n_spin, n_basis, ik_point, n_cells_in_hamiltonian,&
             friction_n_active_atoms, real_eigenvectors, friction_index_list)
 
         implicit none
@@ -17,15 +17,15 @@
         logical, intent(in) :: real_eigenvectors
         integer  :: n_tasks, myid
         !
-        integer, intent(in) :: n_spin, n_basis, n_k_points, n_cells_in_hamiltonian
+        integer, intent(in) :: n_spin, n_basis, ik_point, n_cells_in_hamiltonian
         integer, intent(in) :: friction_n_active_atoms        
         character(len=50),dimension(n_spin) :: file_name
 
         integer, dimension(2), intent(in) :: friction_index_list
-        real*8, intent(out) :: first_order_S(3, friction_n_active_atoms, n_k_points, n_basis*(n_basis+1)/2, n_spin)
-        real*8, intent(out) :: first_order_H(3, friction_n_active_atoms,n_k_points,  n_basis*(n_basis+1)/2,1,n_spin)
-        complex*16, intent(out) :: first_order_S_cmplx(3, friction_n_active_atoms, n_k_points, n_basis*(n_basis+1)/2, n_spin)
-        complex*16, intent(out) :: first_order_H_cmplx(3, friction_n_active_atoms,n_k_points, n_basis*(n_basis+1)/2,1,n_spin)
+        real*8, intent(out) :: first_order_S(3, friction_n_active_atoms, 1, n_basis*(n_basis+1)/2, n_spin)
+        real*8, intent(out) :: first_order_H(3, friction_n_active_atoms, 1,  n_basis*(n_basis+1)/2,1,n_spin)
+        complex*16, intent(out) :: first_order_S_cmplx(3, friction_n_active_atoms, 1, n_basis*(n_basis+1)/2, n_spin)
+        complex*16, intent(out) :: first_order_H_cmplx(3, friction_n_active_atoms, 1, n_basis*(n_basis+1)/2,1,n_spin)
         
         !f2py intent(out) :: first_order_S
         !f2py intent(out) :: first_order_H
@@ -34,7 +34,7 @@
 
         !  counters
         integer :: i_cart, i_atom, i_basis, j_basis, i_spin
-        integer :: i_cell, i_index, i_k_task,i_k_point 
+        integer :: i_cell, i_index, i_k_task, n_k_points, i_k_point
         integer :: mpierror, numprocs
         integer status(MPI_STATUS_SIZE)
 
@@ -56,11 +56,15 @@
             basis_index(i_basis,j_basis) = i_index
           enddo
         enddo
+
+        n_k_points = ik_point
         !  write basis function properties
         if (friction_use_complex_matrices) then
         write(*,*) "I am using complex matrices" 
             i_k_task = 0
-            do i_k_point = 1, n_k_points, 1
+            !bodged it to do only the requested i_k_point, see other file for
+            !'proper, multi k version
+            do i_k_point = ik_point, n_k_points, 1
             if (myid.eq.MOD(i_k_point,n_tasks) .and. myid <= n_k_points) then
                 write(*,*) "I am task: ", myid, "with k-point:", i_k_point 
                 i_k_task = i_k_task + 1

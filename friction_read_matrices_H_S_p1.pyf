@@ -4,10 +4,10 @@
 python module friction_read_matrices_H_S_p1 ! in 
     interface  ! in :friction_read_matrices_H_S_p1
         subroutine friction_read_matrices_h_s_p1(first_order_s,first_order_h,first_order_s_cmplx,first_order_h_cmplx,n_spin,n_basis,n_k_points,n_cells_in_hamiltonian,friction_n_active_atoms,real_eigenvectors,friction_index_list) ! in :friction_read_matrices_H_S_p1:friction_read_matrices_H_S_p1.f90
-            real*8 dimension(3,friction_n_active_atoms,n_k_points,n_basis*n_basis,n_spin),intent(out),depend(friction_n_active_atoms,n_k_points,n_basis,n_spin) :: first_order_s
-            real*8 dimension(3,friction_n_active_atoms,n_k_points,n_basis*n_basis,1,n_spin),intent(out),depend(friction_n_active_atoms,n_k_points,n_basis,n_spin) :: first_order_h
-            complex*16 dimension(3,friction_n_active_atoms,n_k_points,n_basis*n_basis,n_spin),intent(out),depend(friction_n_active_atoms,n_k_points,n_basis,n_spin) :: first_order_s_cmplx
-            complex*16 dimension(3,friction_n_active_atoms,n_k_points,n_basis*n_basis,1,n_spin),intent(out),depend(friction_n_active_atoms,n_k_points,n_basis,n_spin) :: first_order_h_cmplx
+            real*8 dimension(3,friction_n_active_atoms,n_k_points,n_basis*(n_basis+1)/2,n_spin),intent(out),depend(friction_n_active_atoms,n_k_points,n_basis,n_spin) :: first_order_s
+            real*8 dimension(3,friction_n_active_atoms,n_k_points,n_basis*(n_basis+1)/2,1,n_spin),intent(out),depend(friction_n_active_atoms,n_k_points,n_basis,n_spin) :: first_order_h
+            complex*16 dimension(3,friction_n_active_atoms,n_k_points,n_basis*(n_basis+1)/2,n_spin),intent(out),depend(friction_n_active_atoms,n_k_points,n_basis,n_spin) :: first_order_s_cmplx
+            complex*16 dimension(3,friction_n_active_atoms,n_k_points,n_basis*(n_basis+1)/2,1,n_spin),intent(out),depend(friction_n_active_atoms,n_k_points,n_basis,n_spin) :: first_order_h_cmplx
             integer intent(in) :: n_spin
             integer intent(in) :: n_basis
             integer intent(in) :: n_k_points
